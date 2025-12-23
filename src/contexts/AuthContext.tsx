@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { api } from '../lib/api';
-import { getDisableExternalApiRuntime } from '../lib/devMode';
 
 type User = {
   id: string;
@@ -25,16 +24,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem('token');
-      const devMode = getDisableExternalApiRuntime();
-      if (devMode) {
-        // Developer Mode: simulate auth when token like 'dev-<id>' exists
-        if (token && token.startsWith('dev-')) {
-          const id = token.split('dev-')[1] || 'dev';
-          setUser({ id, email: `${id}@example.com`, full_name: 'Dev User' });
-        }
-        setLoading(false);
-        return;
-      }
 
       if (token) {
         try {
@@ -52,16 +41,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const devMode = getDisableExternalApiRuntime();
-    if (devMode) {
-      // simulate signup in developer mode
-      const id = email.split('@')[0] || `dev${Date.now()}`;
-      const token = `dev-${id}`;
-      const user = { id, email, full_name: fullName || 'Dev User' };
-      localStorage.setItem('token', token);
-      setUser(user);
-      return;
-    }
     try {
       const { data } = await api.post('/auth/signup', { email, password, fullName });
       localStorage.setItem('token', data.token);
@@ -72,16 +51,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    const devMode = getDisableExternalApiRuntime();
-    if (devMode) {
-      // simulate signin
-      const id = email.split('@')[0] || `dev${Date.now()}`;
-      const token = `dev-${id}`;
-      const user = { id, email, full_name: 'Dev User' };
-      localStorage.setItem('token', token);
-      setUser(user);
-      return;
-    }
     try {
       const { data } = await api.post('/auth/signin', { email, password });
       localStorage.setItem('token', data.token);

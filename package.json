@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:all": "concurrently \"npm run dev\" \"npm --prefix server run dev\"",
+    "dev:stub": "concurrently \"npm run dev\" \"npm run auth-stub\"",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -35,6 +37,7 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.3.0",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "concurrently": "^8.2.0"
   }
 }

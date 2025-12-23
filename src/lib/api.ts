@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-// Use runtime env URL when available so deployments or alternative dev servers can be used
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Use runtime env URL when available. In development we prefer a relative
+// `/api` base so Vite's dev server proxy forwards requests to the backend
+// (see vite.config.ts). For production set `VITE_API_URL` to your deployed API.
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 export const api = axios.create({
     baseURL: API_URL,
